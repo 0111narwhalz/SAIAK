@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿/*
+   Transforms inputs to outputs
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;

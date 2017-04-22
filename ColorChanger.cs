@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿/*
+   Visualisation component; will not be present in game version
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

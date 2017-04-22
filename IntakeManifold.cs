@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿/*
+   Controls inputs and integrates the program into the environment
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
