@@ -1,3 +1,6 @@
+# Unity meta files
+*.meta
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
