@@ -33,14 +33,15 @@ public class ColorChanger : MonoBehaviour {
 		{
 			for(int i = 0; i < 3; i++)
 			{
-				rgb[i] = NeuralNetwork.nodeValues[id[0]][id[1] * (i + 1)] + 1;
+				rgb[i] = NeuralNetwork.nodeValues[id[0]][id[1] * 3 + i] + 1;
 				rgb[i] /= 2;
 			}
 		}else
 		{
 			for(int i = 0; i < 3; i++)
 			{
-				rgb[i] = NeuralNetwork.desired[id[1]];
+				rgb[i] = ExhaustManifold.desiredOutput[id[1] * 3 + i] + 1;
+				rgb[i] /= 2;
 			}
 		}
 		rend.material.SetColor("_Color", new Color(rgb[0],rgb[1],rgb[2]));

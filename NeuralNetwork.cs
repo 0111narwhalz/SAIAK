@@ -9,12 +9,12 @@ using UnityEngine;
 
 public class NeuralNetwork : MonoBehaviour {
 
-	public static float[][] nodeValues;	//Rank, File
+	public static float[][] nodeValues;		//Rank, File
 	public static float[][][] nodeWeight;	//Rank, File, SourceFile
-	public static float[] desired;
-	public static int inputCounts = 6;
-	int outputCounts = 6;
-	int[] hiddenDimensions = new int[2]{1,18};
+	public static int inputCounts = 9;
+	public static int outputCounts = 6;
+	public static int[] hiddenDimensions = new int[2]{1,18};
+	public static bool ready = false;
 	System.Random rand = new System.Random();
 	
 	// Use this for initialization
@@ -23,7 +23,6 @@ public class NeuralNetwork : MonoBehaviour {
 		//Initialize the empty network
 		nodeValues = new float[hiddenDimensions[0] + 2][];
 		nodeWeight = new float[hiddenDimensions[0] + 2][][];
-		desired = new float[outputCounts];
 		for(int i = 0; i < nodeValues.Length; i++)
 		{
 			int quantity;
@@ -48,27 +47,12 @@ public class NeuralNetwork : MonoBehaviour {
 			}
 		}
 		
-		//Generate garbage weights
-		for(int i = 1; i < nodeWeight.Length; i++)
-		{
-			for(int j = 0; j < nodeWeight[i].Length; j++)
-			{
-				for(int k = 0; k < nodeWeight[i][j].Length; k++)
-				{
-					nodeWeight[i][j][k] = (float)(rand.NextDouble() * 4) - 2;
-				}
-			}
-		}
 	}
 	
 	// FixedUpdate is called once per physics frame
 	void FixedUpdate () {
-		
-		//Set some garbage inputs
-		/* for(int i = 0; i < inputCounts; i++)
-		{
-				nodeValues[0][i] = (float)(rand.NextDouble() * 2) - 1;
-		} */
+		if(!ready)
+			return;
 		
 		//Propagate the network
 		for(int i = 1; i < hiddenDimensions[0] + 2; i++)

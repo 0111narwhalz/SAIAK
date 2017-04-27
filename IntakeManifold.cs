@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class IntakeManifold : MonoBehaviour {
 	
-	System.Random rand = new System.Random();
+	System.Random rand = new System.Random(5);
 	float[] inputs;
 
 	// Use this for initialization
@@ -22,12 +22,6 @@ public class IntakeManifold : MonoBehaviour {
 	
 	void FixedUpdate()
 	{
-		//Make garbage inputs
-		for(int i = 0; i < NeuralNetwork.inputCounts; i++)
-		{
-			inputs[i] = (float)(rand.NextDouble() * 2) - 1;
-		}
-		
 		//Apply the inputs
 		for(int i = 0; i < NeuralNetwork.inputCounts; i++)
 		{
