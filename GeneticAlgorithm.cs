@@ -11,10 +11,11 @@ public class GeneticAlgorithm : MonoBehaviour {
 	
 	public static float[] fitness;
 	static float[][][][] population;
-	static int popSize = 20;
+	public const  int popSize = 50;
 	static public int id;
 	static System.Random rand = new System.Random();
 	static bool init = true;
+	static int genNum = 0;
 	
 	// Use this for initialization
 	void Start () {
@@ -40,11 +41,14 @@ public class GeneticAlgorithm : MonoBehaviour {
 		{
 			Breed();
 			id = 0;
+			print("Gen " + genNum);
+			print(Utility.Average(fitness));
+			genNum++;
 			return;
 		}
 		NeuralNetwork.nodeWeight = population[id];
 		fitness[id] = ExhaustManifold.Evaluate();
-		//print(id);
+		//print(fitness[id]);
 		id++;
 	}
 	
@@ -69,7 +73,7 @@ public class GeneticAlgorithm : MonoBehaviour {
 	
 	static void Breed()
 	{
-		int mutFactor = 100; //Expressed as one mutation in mutFactor (e.g. one in 100)
+		int mutFactor = 1000; //Expressed as one mutation in mutFactor (e.g. one in 1000)
 		float mutType = .5f; //Balance between overwrite mutations and translation mutations (1 is guaranteed translation)
 		Array.Sort<float, float[][][]>(fitness, population);
 		for(int i = 0; i < popSize / 2; i++)
@@ -80,7 +84,7 @@ public class GeneticAlgorithm : MonoBehaviour {
 				{
 					for(int l = 0; l < population[popSize - i - 1][j][k].Length; l++)
 					{
-						population[popSize - i - 1][j][k][l] = rand.Next() % 2 == 0 ? population[popSize - 1][j][k][l] : population[i][j][k][l];
+						population[popSize - i - 1][j][k][l] = rand.Next() % 2 == 0 ? population[popSize -i - 1][j][k][l] : population[i][j][k][l];
 						if(rand.Next() % mutFactor == 0)
 						{
 							population[popSize - i - 1][j][k][l] = rand.NextDouble() > mutType ? 

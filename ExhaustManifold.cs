@@ -25,9 +25,23 @@ public class ExhaustManifold : MonoBehaviour {
 	public static float Evaluate()
 	{
 		float fitness = 0f;
-		for(int i = 0; i < NeuralNetwork.outputCounts; i++)
+		for(int i = 0; i < NeuralNetwork.outputCounts / 3; i++)
 		{
-			fitness -= Math.Abs(NeuralNetwork.nodeValues[NeuralNetwork.nodeValues.Length - 1][i] - desiredOutput[i]);
+			Color rgb = new Color(
+				NeuralNetwork.nodeValues[NeuralNetwork.nodeValues.Length - 1][i * 3],
+				NeuralNetwork.nodeValues[NeuralNetwork.nodeValues.Length - 1][i * 3 + 1],
+				NeuralNetwork.nodeValues[NeuralNetwork.nodeValues.Length - 1][i * 3 + 2]);
+			float[] hsv = new float[3];
+			Color.RGBToHSV(rgb, out hsv[0], out hsv[1], out hsv[2]);
+			Color rgbDesired = new Color(
+				desiredOutput[i * 3],
+				desiredOutput[i * 3 + 1],
+				desiredOutput[i * 3 + 2]);
+			float[] hsvDesired = new float[3];
+			Color.RGBToHSV(rgbDesired, out hsvDesired[0], out hsvDesired[1], out hsvDesired[2]);
+			fitness -= (float)Math.Abs(hsv[0] - hsvDesired[0]);
+			fitness -= (float)Math.Abs(hsv[1] - hsvDesired[1]) / 2;
+			fitness -= (float)Math.Abs(hsv[2] - hsvDesired[2]) / 4;
 		}
 		return fitness;
 	}

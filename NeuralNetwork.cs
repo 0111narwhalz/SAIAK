@@ -15,7 +15,6 @@ public class NeuralNetwork : MonoBehaviour {
 	public static int outputCounts = 6;
 	public static int[] hiddenDimensions = new int[2]{1,18};
 	public static bool ready = false;
-	System.Random rand = new System.Random();
 	
 	// Use this for initialization
 	void Start () {
