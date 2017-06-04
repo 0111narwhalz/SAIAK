@@ -20,7 +20,7 @@ public class IntakeManifold : MonoBehaviour {
 		}
 	}
 	
-	void FixedUpdate()
+	void Update()
 	{
 		//Apply the inputs
 		for(int i = 0; i < NeuralNetwork.inputCounts; i++)

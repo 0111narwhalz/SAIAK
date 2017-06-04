@@ -28,7 +28,7 @@ public class ColorChanger : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		if(id[0] != -1)
 		{
 			for(int i = 0; i < 3; i++)

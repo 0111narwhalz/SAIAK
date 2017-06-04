@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 class Utility
 {
@@ -22,5 +23,13 @@ class Utility
 			output /= 2;
 		}
 		return output;
+	}
+	
+	public static void ArrayPrint<T>(ref T[] input)
+	{
+		foreach(T val in input)
+		{
+			MonoBehaviour.print(val.ToString());
+		}
 	}
 }

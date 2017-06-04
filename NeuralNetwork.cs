@@ -49,7 +49,7 @@ public class NeuralNetwork : MonoBehaviour {
 	}
 	
 	// FixedUpdate is called once per physics frame
-	void FixedUpdate () {
+	void Update () {
 		if(!ready)
 			return;
 		
@@ -70,7 +70,7 @@ public class NeuralNetwork : MonoBehaviour {
 	
 	float Sigma(float x)
 	{
-		return 1f / (float)(1 + System.Math.Pow(System.Math.E,x));
+		return (1f / (float)(1 + System.Math.Pow(System.Math.E,x))) * 2 - 1;
 	}
 	
 	//Requires the values of the previous rank and a weight for each
