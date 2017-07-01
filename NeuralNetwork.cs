@@ -2,86 +2,69 @@
    Transforms inputs to outputs
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System;
-using UnityEngine;
+using Saiak;
 
-public class NeuralNetwork : MonoBehaviour {
-
-	public static float[][] nodeValues;		//Rank, File
-	public static float[][][] nodeWeight;	//Rank, File, SourceFile
-	public static int inputCounts = 9;
-	public static int outputCounts = 6;
-	public static int[] hiddenDimensions = new int[2]{1,18};
-	public static bool ready = false;
+namespace Saiak
+{
+	public class NeuralNetwork
+	{
+		public static float[][] nodeValues;		//Rank, File
+		public static float[][][] nodeWeight;	//Rank, File, SourceFile
+		public static int inputCounts = 9;
+		public static int outputCounts = 3;
+		public static int[] hiddenDimensions = new int[2]{1,18};
+		public static bool ready = false;
 	
-	// Use this for initialization
-	void Start () {
+		// Use this for initialization
+		public static void Start () {
 		
-		//Initialize the empty network
-		nodeValues = new float[hiddenDimensions[0] + 2][];
-		nodeWeight = new float[hiddenDimensions[0] + 2][][];
-		for(int i = 0; i < nodeValues.Length; i++)
-		{
-			int quantity;
-			if(i == 0)
+			//Initialize the empty network
+			nodeValues = new float[hiddenDimensions[0] + 2][];
+			nodeWeight = new float[hiddenDimensions[0] + 2][][];
+			for(int i = 0; i < nodeValues.Length; i++)
 			{
-				quantity = inputCounts;
-			}else if(i == hiddenDimensions[0] + 1)
-			{
-				quantity = outputCounts;
-			}else
-			{
-				quantity = hiddenDimensions[1];
-			}
-			nodeWeight[i] = new float[quantity][];
-			nodeValues[i] = new float[quantity];
-			if(i != 0)
-			{
-				for(int j = 0; j < quantity; j++)
+				int quantity;
+				if(i == 0)
 				{
-					nodeWeight[i][j] = new float[nodeValues[i - 1].Length];
+					quantity = inputCounts;
+				}else if(i == hiddenDimensions[0] + 1)
+				{
+					quantity = outputCounts;
+				}else
+				{
+					quantity = hiddenDimensions[1];
 				}
+				nodeValues[i] = new float[quantity];
 			}
 		}
+	
+		// FixedUpdate is called once per physics frame
+		public static void Update () {
+			if(!ready)
+				return;
 		
-	}
-	
-	// FixedUpdate is called once per physics frame
-	void Update () {
-		if(!ready)
-			return;
-		
-		//Propagate the network
-		for(int i = 1; i < hiddenDimensions[0] + 2; i++)
-		{
-			Propagate(i);
+			//Propagate the network
+			for(int i = 1; i < hiddenDimensions[0] + 2; i++)
+			{
+				Propagate(i);
+			}
 		}
-	}
 	
-	void Propagate (int rank)
-	{
-		for(int i = 0; i < nodeValues[rank].Length; i++)
+		static void Propagate (int rank)
 		{
-			nodeValues[rank][i] = Sigma(WeightedSum(nodeValues[rank-1], nodeWeight[rank][i]));
+			float[] val = new float[nodeValues[rank - 1].Length + 1];
+			for(int i = 0; i < nodeValues[rank - 1].Length; i++)
+			{
+				val[i] = nodeValues[rank - 1][i];
+			}
+			for(int i = 0; i < nodeValues[rank].Length; i++)
+			{
+				val[val.Length - 1] = nodeValues[rank][i];
+				nodeValues[rank][i] = Utility.Sigma(Utility.WeightedSum(val, nodeWeight[rank][i]));
+			}
 		}
-	}
-	
-	float Sigma(float x)
-	{
-		return (1f / (float)(1 + System.Math.Pow(System.Math.E,x))) * 2 - 1;
-	}
-	
-	//Requires the values of the previous rank and a weight for each
-	float WeightedSum(float[] values, float[] weights)
-	{
-		float sum = 0;
-		for(int i = 0; i < values.Length; i++)
-		{
-			sum += values[i] * weights[i];
-		}
-		return sum;
 	}
 }
- 

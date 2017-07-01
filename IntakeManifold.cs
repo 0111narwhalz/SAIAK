@@ -2,30 +2,39 @@
    Controls inputs and integrates the program into the environment
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using Saiak;
 
-public class IntakeManifold : MonoBehaviour {
-	
-	System.Random rand = new System.Random(5);
-	float[] inputs;
-
-	// Use this for initialization
-	void Start () {
-		inputs = new float[NeuralNetwork.inputCounts];
-		for(int i = 0; i < NeuralNetwork.inputCounts; i++)
-		{
-			inputs[i] = (float)(rand.NextDouble() * 2) - 1;
-		}
-	}
-	
-	void Update()
+namespace Saiak
+{
+	public class IntakeManifold
 	{
-		//Apply the inputs
-		for(int i = 0; i < NeuralNetwork.inputCounts; i++)
+		static float[] inputs;
+
+		public static void Start () {
+			inputs = new float[9];
+			for(int i = 0; i < inputs.Length; i++)
+			{
+				inputs[i] = 0;
+			}
+		}
+	
+		public static void Update()
 		{
-			NeuralNetwork.nodeValues[0][i] = inputs[i];
+			//Get the inputs
+			for(int i = 0; i < 3; i++)
+			{
+				inputs[i] = Physics.pos[i];
+				inputs[i + 3] = Physics.vel[i];
+				inputs[i + 6] = ExhaustManifold.tgt[i];
+			}
+			//Apply the inputs
+			for(int i = 0; i < 9; i++)
+			{
+				NeuralNetwork.nodeValues[0][i] = inputs[i];
+			}
 		}
 	}
 }
