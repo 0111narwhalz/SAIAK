@@ -4,12 +4,13 @@
 
 using System;
 using Saiak;
+using UnityEngine;
 
 namespace Saiak
 {
 	class Utility
 	{
-		public static Random rand = new Random();
+		public static System.Random rand = new System.Random();
 		
 		public static float Average(float[] input)
 		{
@@ -78,6 +79,44 @@ namespace Saiak
 			}
 			return arrOut;
 		}
+		
+		public static float SurfaceDistance(double[] startPos, double[] finalPos)
+		{
+			double debug;
+			try
+			{
+				debug = startPos[0];
+			}
+			catch(NullReferenceException nre)
+			{
+				Debug.Log("start lat");
+			}
+			try
+			{
+				debug = startPos[1];
+			}
+			catch(NullReferenceException nre)
+			{
+				Debug.Log("start long");
+			}
+			try
+			{
+				debug = finalPos[0];
+			}
+			catch(NullReferenceException nre)
+			{
+				Debug.Log("end lat");
+			}
+			try
+			{
+				debug = finalPos[1];
+			}
+			catch(NullReferenceException nre)
+			{
+				Debug.Log("end long");
+			}
+			return (float) (Math.Acos(Math.Sin(startPos[0]) * Math.Sin(finalPos[0]) + Math.Cos(startPos[1]) * Math.Cos(finalPos[1]) * Math.Cos(Math.Abs(startPos[1] - finalPos[1]))));
+		}
 	
 		public static float Sigma(float x)
 		{
@@ -86,10 +125,42 @@ namespace Saiak
 	
 		public static float WeightedSum(float[] values, float[] weights)
 		{
-			//Console.WriteLine("{0} {1}", values.Length, weights.Length);
 			float sum = 0;
+			float debug;
+			try
+			{
+				debug = values.Length;
+			}
+			catch(NullReferenceException nre)
+			{
+				Debug.Log("Values");
+			}
+			try
+			{
+				debug = weights.Length;
+			}
+			catch(NullReferenceException nre)
+			{
+				Debug.Log("Weights");
+			}
 			for(int i = 0; i < (values.Length > weights.Length ? weights.Length : values.Length); i++)
 			{
+				try
+				{
+					debug = values[i];
+				}
+				catch(NullReferenceException nre)
+				{
+					Debug.Log("Values " + i);
+				}
+				try
+				{
+					debug = weights[i];
+				}
+				catch(NullReferenceException nre)
+				{
+					Debug.Log("Weights " + i);
+				}
 				sum += values[i] * weights[i];
 			}
 			return sum;

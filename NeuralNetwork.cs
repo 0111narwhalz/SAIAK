@@ -6,20 +6,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Saiak;
+using UnityEngine;
 
 namespace Saiak
 {
 	public class NeuralNetwork
 	{
-		public static float[][] nodeValues;		//Rank, File
-		public static float[][][] nodeWeight;	//Rank, File, SourceFile
-		public static int inputCounts = 9;
-		public static int outputCounts = 3;
-		public static int[] hiddenDimensions = new int[2]{1,18};
-		public static bool ready = false;
+		public float[][] nodeValues;		//Rank, File
+		public float[][][] nodeWeight;	//Rank, File, SourceFile
+		public int inputCounts = 15;
+		public int outputCounts = 2;
+		public int[] hiddenDimensions = new int[2]{3,18};
+		public bool ready = false;
 	
 		// Use this for initialization
-		public static void Start () {
+		public NeuralNetwork () {
 		
 			//Initialize the empty network
 			nodeValues = new float[hiddenDimensions[0] + 2][];
@@ -42,7 +43,7 @@ namespace Saiak
 		}
 	
 		// FixedUpdate is called once per physics frame
-		public static void Update () {
+		public void Update () {
 			if(!ready)
 				return;
 		
@@ -53,7 +54,7 @@ namespace Saiak
 			}
 		}
 	
-		static void Propagate (int rank)
+		void Propagate (int rank)
 		{
 			float[] val = new float[nodeValues[rank - 1].Length + 1];
 			for(int i = 0; i < nodeValues[rank - 1].Length; i++)
@@ -63,7 +64,25 @@ namespace Saiak
 			for(int i = 0; i < nodeValues[rank].Length; i++)
 			{
 				val[val.Length - 1] = nodeValues[rank][i];
-				nodeValues[rank][i] = Utility.Sigma(Utility.WeightedSum(val, nodeWeight[rank][i]));
+				try
+				{
+					nodeValues[rank][i] = Utility.Sigma(Utility.WeightedSum(val, nodeWeight[rank][i]));
+				}
+				catch(NullReferenceException nre)
+				{
+					Debug.Log(val + ", " + rank + ", " + i);
+				}
+			}
+		}
+		
+		public void Zero ()
+		{
+			for(int i = 0; i < nodeValues.Length; i++)
+			{
+				for(int j = 0; j < nodeValues[i].Length; j++)
+				{
+					nodeValues[i][j] = 0f;
+				}
 			}
 		}
 	}

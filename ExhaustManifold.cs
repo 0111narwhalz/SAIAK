@@ -11,34 +11,26 @@ namespace Saiak
 {
 	public class ExhaustManifold
 	{
-	
-		public static float[] tgt;
-	
-		// Use this for initialization
-		public static void Start () {
-			tgt = new float[3];
-			for(int i = 0; i < tgt.Length; i++)
+		double[] startPos;
+		
+		public ExhaustManifold(Vessel ves)
+		{
+			if(ves == null)
 			{
-				tgt[i] = (float)(Utility.rand.NextDouble() * 2 - 1);
+				return;
 			}
+			startPos = new double[2]{ves.latitude * Math.PI / 180, ves.longitude * Math.PI / 180};
 		}
 		
-		public static void Update()
+		public void Update(Vessel ves, NeuralNetwork nn)
 		{
-			for(int i = 0; i < 3; i++)
-			{
-				Physics.frc[i] = NeuralNetwork.nodeValues[NeuralNetwork.nodeValues.Length - 1][i] * 10;
-			}
+			ves.ctrlState.wheelSteer = nn.nodeValues[nn.nodeValues.Length - 1][0];
+			ves.ctrlState.wheelThrottle = nn.nodeValues[nn.nodeValues.Length - 1][1];
 		}
 	
-		public static float Evaluate()
+		public float Evaluate(Vessel ves)
 		{
-			float fitness = 0f;
-			for(int i = 0; i < 3; i++)
-			{
-				fitness -= (float)Math.Pow(tgt[i] - Physics.pos[i], 2);
-			}
-			return fitness;
+			return Utility.SurfaceDistance(startPos, new double[2]{ves.latitude * Math.PI / 180, ves.longitude * Math.PI / 180});
 		}
 	}
 }

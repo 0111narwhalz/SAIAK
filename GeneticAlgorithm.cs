@@ -6,24 +6,26 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Saiak;
+using UnityEngine;
 
 namespace Saiak
 {
 	public class GeneticAlgorithm
 	{
 	
-		public static float[] fitness;
+		public float[] fitness;
 		static float[][][][] population;
-		public static int popSize = 100;
-		static public int id;
-		public static bool init = true;
-		static int genNum = 0;
+		public int popSize = 100;
+		public int id;
+		static bool init = true;
+		public int genNum = 0;
 		//public static float[] extrema;		//min, max
 		//public static Queue<float[]> genExtrema;
 		//static float[] gEx;
 	
 		// Use this for initialization
-		public static void Start () {
+		public GeneticAlgorithm () 
+		{
 			fitness = new float[popSize];
 			population = new float[popSize][][][];
 			id = 0;
@@ -39,28 +41,29 @@ namespace Saiak
 		}
 	
 		// FixedUpdate is called once per physics frame
-		public static void Update() {
-			if(init)
+		public void Update(ref NeuralNetwork nn) 
+		{
+			while(init)
 			{
-				population[id] = Initialize(NeuralNetwork.inputCounts, NeuralNetwork.hiddenDimensions, NeuralNetwork.outputCounts);
-				NeuralNetwork.nodeWeight = population[id];
+				Debug.Log("Generating individual " + id);
+				population[id] = Initialize(nn.inputCounts, nn.hiddenDimensions, nn.outputCounts);
+				nn.nodeWeight = population[id];
 				if(++id == popSize)
 				{
 					id = 0;
-					NeuralNetwork.ready = true;
+					nn.ready = true;
 					init = false;
 				}
-				return;
 			}
+			
 			if(id == popSize)
 			{
 				Breed();
 				id = 0;
-				Console.Clear();
-				Console.WriteLine("Gen " + genNum);
-				Console.WriteLine(Utility.Median(Utility.ArrayChunk(ref fitness, 25)));
-				Utility.ArrayPrint(ref ExhaustManifold.tgt, ",");
-				Utility.ArrayPrint(ref fitness, "\n");
+				//Console.Clear();
+				//Console.WriteLine("Gen " + genNum);
+				//Console.WriteLine(Utility.Median(Utility.ArrayChunk(ref fitness, 25)));
+				Utility.ArrayPrint<float>(ref fitness, "\n");
 				genNum++;
 				for(int i = 0; i < fitness.Length; i++)
 				{
@@ -73,8 +76,7 @@ namespace Saiak
 				*/
 				return;
 			}
-			NeuralNetwork.nodeWeight = population[id];
-			fitness[id] -= ExhaustManifold.Evaluate();
+			nn.nodeWeight = population[id];
 			/*
 			if(extrema[0] == 1)
 			{
@@ -126,7 +128,7 @@ namespace Saiak
 			return weights;
 		}
 	
-		static void Breed()
+		void Breed()
 		{
 			int mutFactor = 1000; //Expressed as one mutation in mutFactor (e.g. one in 1000)
 			float mutType = .5f;  //Balance between overwrite mutations and translation mutations (1 is guaranteed translation)
@@ -137,29 +139,25 @@ namespace Saiak
 			{
 				if(test != population[0])
 				{
-					Console.WriteLine("Outermost " + i);
-					Environment.exit = true;
+					//Console.WriteLine("Outermost " + i);
 				}
 				for(int j = 1; j < population[popSize - i - 1].Length; j++)
 				{
 					if(test != population[0])
 					{
-						Console.WriteLine("Outer " + i + ", " + j);
-						Environment.exit = true;
+						//Console.WriteLine("Outer " + i + ", " + j);
 					}
 					for(int k = 0; k < population[popSize - i - 1][j].Length; k++)
 					{
 						if(test != population[0])
 						{
-							Console.WriteLine("Inner " + i + ", " + j+ ", " + k);
-							Environment.exit = true;
+							//Console.WriteLine("Inner " + i + ", " + j+ ", " + k);
 						}
 						for(int l = 0; l < population[popSize - i - 1][j][k].Length; l++)
 						{
 							if(test != population[0])
 							{
-								Console.WriteLine("Innermost " + i + ", " + j + ", " + k + ", " + l);
-								Environment.exit = true;
+								//Console.WriteLine("Innermost " + i + ", " + j + ", " + k + ", " + l);
 							}
 							population[popSize - i - 1][j][k][l] = Utility.rand.Next() % 2 == 0 ? population[popSize -i - 1][j][k][l] : population[i][j][k][l];
 							if(Utility.rand.Next() % mutFactor == 0)
