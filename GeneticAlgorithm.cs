@@ -15,7 +15,7 @@ namespace Saiak
 	
 		public float[] fitness;
 		static float[][][][] population;
-		public int popSize = 100;
+		public int popSize = 25;
 		public int id;
 		static bool init = true;
 		public int genNum = 0;

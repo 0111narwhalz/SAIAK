@@ -115,7 +115,8 @@ namespace Saiak
 			{
 				Debug.Log("end long");
 			}
-			return (float) (Math.Acos(Math.Sin(startPos[0]) * Math.Sin(finalPos[0]) + Math.Cos(startPos[1]) * Math.Cos(finalPos[1]) * Math.Cos(Math.Abs(startPos[1] - finalPos[1]))));
+			return 600000 * (float) (Math.Acos(Math.Sin(startPos[0]) * Math.Sin(finalPos[0]) + 
+			                          Math.Cos(startPos[0]) * Math.Cos(finalPos[0]) * Math.Cos(Math.Abs(startPos[1] - finalPos[1]))));
 		}
 	
 		public static float Sigma(float x)

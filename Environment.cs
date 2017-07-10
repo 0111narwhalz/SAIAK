@@ -32,6 +32,7 @@ namespace Saiak
 		static Dictionary<string, Brain> pop = new Dictionary<string, Brain>();
 		string vName;
 		double[] lastPos = new double[2]{0,0};
+		int age;
 		
 		public new void Start()
 		{
@@ -40,6 +41,7 @@ namespace Saiak
 			{
 				return;
 			}
+			age = 0;
 			vName = this.vessel.vesselName;
 			NeuralNetwork nn = new NeuralNetwork();
 			//Console.Write('.');
@@ -70,6 +72,7 @@ namespace Saiak
 			{
 				return;
 			}
+			age++;
 			try
 			{
 				if(Terminate())
@@ -91,6 +94,10 @@ namespace Saiak
 			{
 				Debug.Log("Problems with termination!");
 			}
+			ScreenMessages.PostScreenMessage(string.Format("This: Generation {0} ID {1} Fitness {2}",
+			                                               pop[vName].ga.genNum, pop[vName].ga.id, pop[vName].ga.fitness[pop[vName].ga.id]),
+			                                 .02f,
+			                                 ScreenMessageStyle.UPPER_LEFT);
 			try
 			{
 				pop[vName].im.Update(this.vessel, pop[vName].nn);
@@ -129,6 +136,7 @@ namespace Saiak
 		{
 			if(this.vessel.state == Vessel.State.DEAD)
 			{
+				Debug.Log("Terminated for Vessel Dead");
 				return true;
 			}
 			if(this.vessel.state == Vessel.State.INACTIVE)
@@ -137,16 +145,19 @@ namespace Saiak
 			}
 			if(this.vessel.CurrentControlLevel == Vessel.ControlLevel.NONE)
 			{
+				Debug.Log("Terminated for Vessel Uncontrollable");
 				return true;
 			}
-			if(this.vessel.missionTime > 120 && pop[vName].em.Evaluate(this.vessel) < 3f)
+			if(this.vessel.missionTime > 120 && pop[vName].em.Evaluate(this.vessel) < 100f)
 			{
+				Debug.Log("Terminated for Non-Starter or Looping");
 				return true;
 			}
 			if(this.vessel.latitude  < lastPos[0] + .01f && this.vessel.latitude  > lastPos[0] - .01f && 
 			   this.vessel.longitude < lastPos[1] + .01f && this.vessel.longitude > lastPos[1] - .01f &&
-			   this.vessel.missionTime % 10f == 0)
+			   (age) % 500 == 0)
 			{
+				Debug.Log("Terminated for Vessel Stuck");
 				return true;
 			}
 			else
